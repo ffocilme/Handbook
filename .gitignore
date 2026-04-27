@@ -11,3 +11,4 @@ _tex/
 .build/
 _pandoc_cache/
 
+.inputs.tex

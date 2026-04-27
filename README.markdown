@@ -87,6 +87,44 @@ The recommended approach is **VSCode + WSL** (no LaTeX install on Windows needed
 
 Alternatively, install [MiKTeX](https://miktex.org/download) natively on Windows and use Git Bash.
 
+#### Native Windows (no WSL) — Git Bash + Chocolatey
+
+If your machine doesn't support virtualization (so WSL is not an option), you can build natively using Git Bash. You need to install three tools:
+
+**1. Install `make` via Chocolatey**
+
+Open **PowerShell as Administrator** and run:
+
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+```
+
+Then, still in PowerShell as Administrator:
+
+```powershell
+choco install make -y
+```
+
+**2. Install Pandoc**
+
+Download and run the `.msi` installer from [pandoc.org/installing.html](https://pandoc.org/installing.html).
+
+**3. Install MiKTeX (LaTeX for Windows)**
+
+Download and run the installer from [miktex.org/download](https://miktex.org/download).  
+When asked *"Install missing packages on-the-fly"*, select **Yes** — MiKTeX will automatically download any missing LaTeX packages on the first build.
+
+**4. Build**
+
+Close and reopen Git Bash (so PATH updates take effect), then:
+
+```bash
+cd /c/Users/<your-user>/Desktop/Handbook
+make all
+```
+
 ---
 
 ### 🍎 macOS
