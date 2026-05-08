@@ -1,5 +1,107 @@
 # Teoría de Números
 
+## Computar números primos
+
+
+### Criba de Erastotenes
+**Idea:** marcar múltiplos de cada primo hasta $n$.  
+**Complejidad:** $O(n \log \log n)$ 
+
+```cpp
+vi primes(int n)
+{
+    vb isPrime(n + 1, true);
+    vi p;
+    forn(i, 2, n+1)
+    {
+        if (isPrime[i])
+        {
+            p.push_back(i);
+            for(ll j = i*i; j <= n; j += i)
+                isPrime[j] = true;
+        }
+    }
+    return p;
+}
+```
+
+$\clearpage$
+
+### Criba Lineal
+
+**Idea:** Existe una optimización que permite realizar la criba en $O(n)$ a cambio de usar más memoria, que solo debe ser usada si $N \leq 10^7$
+**Complejidad** : $O(n)$
+
+```cpp
+vi linearPrimes(int n)
+{
+    vi mp(n+1); // Minimum Prime Factor
+    vi p;
+
+    forn(i,2,n+1)
+    {
+        if (mp[i] == 0)
+        {
+            mp[i] = i;
+            p.push_back(i);
+        }
+
+        for (int j = 0; i * p[j] <= n; ++j)
+        {
+            mp[i * p[j]] = p[j];
+            if (p[j] == mp[i]) break;
+        }
+    }
+    return p;
+}
+```
+
+### Contar número de primos en un rango
+
+**Idea:** Realizar una suma prefijos
+**Complejidad de precomputo:** $O(n \log \log \sqrt{n})$
+**Complejidad de consulta:** $O(1)$
+
+```cpp
+vi countPrimes(int n, vb &is_prime)
+{
+    vi ps(n+1, 0);
+    forn(i,2,n+1)
+    {
+        if (is_prime[i]) ps[i] = ps[i-1] + 1;
+        else ps[i] = ps[i-1];
+    }
+    return ps;
+}
+
+int countPrimes(int l, int r, vi &count)
+{
+    return ((l == 1) ? count[r] :  count[r] - count[l-1]);
+}
+```
+
+$\clearpage$
+
+### Encontrar primos en un rango
+
+Encontrar primos en un rango
+
+Encontrar números primos en un rango $[L, R]$ donde $R - L + 1 \approx 10^7$ y $R \leq 10^{12}$.
+
+```cpp
+vb segmentedSieveNoPreGen(long long vbL, long long r) {
+    vb isPrime(r - l + 1, true);
+    ll lim = sqrt(r);
+    for (ll i = 2; i <= lim; ++i)
+        for (ll j = max(i * i, (l + i - 1) / i * i); j <= r; j += i)
+            isPrime[j - l] = false;
+            
+    if (l == 1) isPrime[0] = false;
+    return isPrime;
+}
+
+```
+
 ## Números Primos y Factores
 
 **Definición:**  
@@ -201,107 +303,6 @@ pair<int,int> fermat(int n) {
         b = round(sqrt(b2));
     } 
     return {a-b,n/(a-b)};
-}
-```
-
-## Computar números primos
-
-
-### Criba de Erastotenes
-**Idea:** marcar múltiplos de cada primo hasta $n$.  
-**Complejidad:** $O(n \log \log n)$ 
-
-```cpp
-vi primes(int n)
-{
-    vb isPrime(n + 1, true);
-    vi p;
-    forn(i, 2, n+1)
-    {
-        if (isPrime[i])
-        {
-            p.push_back(i);
-            for(ll j = i*i; j <= n; j += i)
-                isPrime[j] = true;
-        }
-    }
-    return p;
-}
-```
-
-$\clearpage$
-
-### Criba Lineal
-
-**Idea:** Existe una optimización que permite realizar la criba en $O(n)$ a cambio de usar más memoria, que solo debe ser usada si $N \leq 10^7$
-**Complejidad** : $O(n)$
-
-```cpp
-vi linearPrimes(int)
-{
-    vi mp(n+1); // Minimum Prime Factor
-    vi p;
-
-    forn(i,2,n+1)
-    {
-        if (mp[i] == 0)
-        {
-            mp[i] = i;
-            p.push_back(i);
-        }
-
-        for (int j = 0; i * p[j] <= n; ++j)
-        {
-            mp[i * p[j]] = p[j];
-            if (p[j] == mp[i]) break;
-        }
-    }
-    return p;
-}
-```
-
-### Contar número de primos en un rango
-
-**Idea:** Realizar una suma prefijos
-**Complejidad de precomputo:** $O(n \log \log \sqrt{n})$
-**Complejidad de consulta:** $O(1)$
-
-```cpp
-vi countPrimes(int n, vb &is_prime)
-{
-    vi ps(n+1, 0);
-    forn(i,2,n+1)
-    {
-        if (is_prime[i]) ps[i] = ps[i-1] + 1;
-        else ps[i] = ps[i-1];
-    }
-    return ps;
-}
-
-int countPrimes(int l, int r, vi &count)
-{
-    return ((l == 1) ? count[r] :  count[r] - count[l-1]);
-}
-```
-
-$\clearpage$
-
-### Encontrar primos en un rango
-
-Encontrar primos en un rango
-
-Encontrar números primos en un rango $[L, R]$ donde $R - L + 1 \approx 10^7$ y $R \leq 10^{12}$.
-
-```cpp
-vb segmentedSieveNoPreGen(long long vbL, long long r) {
-    vb isPrime(r - l + 1, true);
-    ll lim = sqrt(r);
-    for (ll i = 2; i <= lim; ++i)
-        for (ll j = max(i * i, (l + i - 1) / i * i); j <= r; j += i)
-            isPrime[j - l] = false;
-            
-    if (l == 1) isPrime[0] = false;
-    return isPrime;
 }
 ```
 
